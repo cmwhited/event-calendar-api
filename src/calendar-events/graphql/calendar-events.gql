@@ -1,0 +1,210 @@
+type Query {
+  """
+  Get a list of all Calendar Event records sorted by the event start
+  """
+  events: [CalendarEvent]
+  """
+  Get a Calendar Event record by its PK id
+  """
+  event(id: String!): CalendarEvent
+  """
+  Get a list of all Calendar Event records in the given range
+  """
+  eventsInRange(start: String!, end: String!): [CalendarEvent]
+}
+
+type Mutation {
+  """
+  Create a Calendar Event record
+  """
+  createEvent(event: CalendarEventInput!): CalendarEvent
+  """
+  Update an existing Calendar Event record
+  """
+  updateEvent(id: String!, event: CalendarEventInput!): CalendarEvent
+  """
+  Delete a Calendar Event record
+  """
+  removeEvent(id: String!): ApiResponse!
+}
+
+"""
+Calendar Event status enum
+"""
+enum EventStatus {
+  UPCOMING
+  STARTED
+  COMPLETED
+}
+
+"""
+Attending Status enums for Event Guests
+"""
+enum AttendingStatus {
+  GOING
+  PENDING
+  NOT_GOING
+}
+
+"""
+Generic Response type
+"""
+type ApiResponse {
+  """
+  Displays the success or failure of the action
+  """
+  success: Boolean!
+  """
+  A message for the action of the response
+  """
+  message: String!
+}
+
+"""
+Represents an Event Guest
+"""
+type Guest {
+  """
+  the PK id of the Calendar Event Guest
+  """
+  _id: String!
+  """
+  The Guest name
+  """
+  name: String!
+  """
+  The Guest email
+  """
+  email: String!
+  """
+  The Guest's attending status
+  """
+  attending: AttendingStatus!
+}
+
+"""
+Event Guest Input. Used to create an Event Guest record
+"""
+input GuestInput {
+  """
+  the PK id of the Calendar Event Guest
+  """
+  _id: String
+  """
+  The Guest name
+  """
+  name: String!
+  """
+  The Guest email
+  """
+  email: String!
+  """
+  The Guest's attending status
+  """
+  attending: AttendingStatus!
+}
+
+"""
+Represents a Calendar Event instance containing important info about the event
+"""
+type CalendarEvent {
+  """
+  the PK id of the Calendar Event
+  """
+  _id: String!
+  """
+  The status of the Event
+  """
+  status: EventStatus!
+  """
+  The date of when the Event starts in yyyy-MM-dd format. Ex: 2019-01-01
+  """
+  eventStart: String!
+  """
+  The Start time of the Event in hh:mm a format. Ex: 12:30 pm
+  """
+  startTime: String!
+  """
+  The date when the Event ends in yyyy-MM-dd format. Ex: 2019-01-01. Cannot be before the eventStart
+  """
+  eventEnd: String!
+  """
+  The End time of the Event in hh:mm a format. Ex: 01:30 pm. Cannot be before the eventStart, startTime
+  """
+  endTime: String!
+  """
+  The Name of the Event
+  """
+  name: String!
+  """
+  The Event Description. Provides additional info about the Event
+  """
+  description: String
+  """
+  Where the Event is occurring
+  """
+  location: String
+  """
+  Is the Event recurring, if yes, it will occur at the same time each week/day
+  """
+  recurring: Boolean
+  """
+  A list of Guests who were invited to the Event with their current status
+  """
+  guests: [Guest]
+}
+
+"""
+Input to save or update CalendarEvents
+"""
+input CalendarEventInput {
+  """
+  the PK id of the Calendar Event
+  """
+  _id: String
+  """
+  The status of the Event
+  """
+  status: EventStatus!
+  """
+  The date of when the Event starts in yyyy-MM-dd format. Ex: 2019-01-01
+  """
+  eventStart: String!
+  """
+  The Start time of the Event in hh:mm a format. Ex: 12:30 pm
+  """
+  startTime: String!
+  """
+  The date when the Event ends in yyyy-MM-dd format. Ex: 2019-01-01. Cannot be before the eventStart
+  """
+  eventEnd: String!
+  """
+  The End time of the Event in hh:mm a format. Ex: 01:30 pm. Cannot be before the eventStart, startTime
+  """
+  endTime: String!
+  """
+  The Name of the Event
+  """
+  name: String!
+  """
+  The Event Description. Provides additional info about the Event
+  """
+  description: String
+  """
+  Where the Event is occurring
+  """
+  location: String
+  """
+  Is the Event recurring, if yes, it will occur at the same time each week/day
+  """
+  recurring: Boolean
+  """
+  A list of Guests who were invited to the Event with their current status
+  """
+  guests: [GuestInput]
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}
